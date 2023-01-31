@@ -9,35 +9,17 @@ The database schema and API routes information can be found in the [requirements
 - Database: Postgresql
 - Testing: Jasmine and Superjest
 
-## Available Scripts
+## Installation instructions
+### Dev mode
+`npm install` to install dependencies<br />
+`npm run create-dev-db` to create a new database called `store`<br />
+`npm run migrate` to create database tables<br />
+`npm start` to run the app in dev mode
 
-#### Install the app's dependencies
-
-```
-npm install
-```
-
-#### Build a copy of app to 'dist' folder
-```
-npm run build
-```
-
-#### setup the database tables
-```
-npm run migrate
-```
-
-#### Run the app in development mode
-```
-npm start
-```
-A sample request to try out.<br />
-`http://localhost:3000/api/products`
-
-#### Run test cases
-```
-npm run test
-```
+### Test mode
+`npm install` to install dependencies<br />
+`npm run create-test-db` to create a new database called `store_test`<br />
+`npm run test` to excute test cases
 
 ## Ports
 The application runs on port `3000`<br />
