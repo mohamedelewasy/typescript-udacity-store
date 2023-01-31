@@ -12,6 +12,8 @@
     "demigrate": "db-migrate reset",
     "migrate-test": "db-migrate --env test up",
     "demigrate-test": "db-migrate --env test reset",
+    "create-dev-db": "db-migrate --config database_create.json db:create store",
+    "create-test-db": "db-migrate --config database_create.json db:create store_test",
     "lint": "eslint . --ext .ts",
     "format": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
