@@ -9,7 +9,7 @@ const request = supertest(app);
 describe("test product endpoints", () => {
   let token: string;
   beforeAll(async () => {
-    const user = await request.post("/users/register").send({
+    const user = await request.post("/api/users/register").send({
       username: "user1",
       first_name: "user",
       last_name: "user",
@@ -20,7 +20,7 @@ describe("test product endpoints", () => {
   });
   it("create product", async () => {
     const product = await request
-      .post("/products/")
+      .post("/api/products/")
       .send({ name: "product1", price: 1, category: "category1" })
       .set("Authorization", `Bearer ${token}`);
     expect(product.statusCode).toBe(201);
@@ -35,46 +35,46 @@ describe("test product endpoints", () => {
   describe("get products", () => {
     beforeAll(async () => {
       await request
-        .post("/products/")
+        .post("/api/products/")
         .send({ name: "prod1", price: 1, category: "games" })
         .set("Authorization", `Bearer ${token}`);
       await request
-        .post("/products/")
+        .post("/api/products/")
         .send({ name: "prod2", price: 1, category: "games" })
         .set("Authorization", `Bearer ${token}`);
       await request
-        .post("/products/")
+        .post("/api/products/")
         .send({ name: "prod3", price: 1, category: "games" })
         .set("Authorization", `Bearer ${token}`);
       await request
-        .post("/products/")
+        .post("/api/products/")
         .send({ name: "prod4", price: 1, category: "games" })
         .set("Authorization", `Bearer ${token}`);
       await request
-        .post("/products/")
+        .post("/api/products/")
         .send({ name: "prod5", price: 1, category: "books" })
         .set("Authorization", `Bearer ${token}`);
       await request
-        .post("/products/")
+        .post("/api/products/")
         .send({ name: "prod6", price: 1, category: "books" })
         .set("Authorization", `Bearer ${token}`);
       await request
-        .post("/products/")
+        .post("/api/products/")
         .send({ name: "prod7", price: 1, category: "books" })
         .set("Authorization", `Bearer ${token}`);
     });
     it("get a single product", async () => {
-      const product = await request.get("/products/1");
+      const product = await request.get("/api/products/1");
       expect(product.statusCode).toBe(200);
       expect(product.body.product).toEqual(jasmine.objectContaining({ id: 1 }));
     });
     it("get all products", async () => {
-      const products = await request.get("/products");
+      const products = await request.get("/api/products");
       expect(products.statusCode).toBe(200);
       expect((products.body.products as Product[]).length).toBe(8);
     });
     it("get products with category=books", async () => {
-      const products = await request.get("/products?category=book");
+      const products = await request.get("/api/products?category=book");
       expect(products.statusCode).toBe(200);
       expect((products.body.products as Product[]).length).toBe(3);
     });
@@ -93,7 +93,7 @@ describe("test product endpoints", () => {
     });
 
     it("top 5 products are (prod6>>prod2>>prod3>>prod4>>prod5)", async () => {
-      const products = await request.get("/products/mostpopular");
+      const products = await request.get("/api/products/mostpopular");
       expect(products.statusCode).toBe(200);
       expect(products.body.products).toEqual([
         jasmine.objectContaining({ id: 6, sold_number: 200 }),

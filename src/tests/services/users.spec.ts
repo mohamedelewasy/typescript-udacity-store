@@ -7,7 +7,7 @@ const request = supertest(app);
 
 describe("test user endpoints", () => {
   it("register a new user", async () => {
-    const user = await request.post("/users/register").send({
+    const user = await request.post("/api/users/register").send({
       first_name: "user1",
       last_name: "user1",
       password: "password",
@@ -20,7 +20,7 @@ describe("test user endpoints", () => {
 
   it("login with wrong user", async () => {
     const user = await request
-      .post("/users/login")
+      .post("/api/users/login")
       .send({ username: "admin", password: "user" });
     expect(user.statusCode).toBe(401);
     expect(user.body.error.msg).toBe("incorrect username or password");
@@ -28,7 +28,7 @@ describe("test user endpoints", () => {
 
   it("login with valid user", async () => {
     const user = await request
-      .post("/users/login")
+      .post("/api/users/login")
       .send({ username: "user1", password: "password" });
     expect(user.statusCode).toBe(200);
     expect(user.body.token).toBeDefined();
@@ -38,13 +38,13 @@ describe("test user endpoints", () => {
     let token: string;
     beforeAll(async () => {
       const user = await request
-        .post("/users/login")
+        .post("/api/users/login")
         .send({ username: "user1", password: "password" });
       token = user.body.token;
     });
     it("get user with id=1", async () => {
       const user = await request
-        .get("/users/1")
+        .get("/api/users/1")
         .set("Authorization", `Bearer ${token}`);
       expect(user.statusCode).toBe(200);
       expect(user.body.user.id).toBe(1);
@@ -56,7 +56,7 @@ describe("test user endpoints", () => {
 
     it("get all users", async () => {
       const user = await request
-        .get("/users/")
+        .get("/api/users/")
         .set("Authorization", `Bearer ${token}`);
       expect(user.statusCode).toBe(200);
       expect((user.body.users as User[]).length).toBe(1);
@@ -66,6 +66,9 @@ describe("test user endpoints", () => {
   afterAll(async () => {
     const conn = await db.connect();
     const sql =
+      "DELETE FROM order_product; ALTER SEQUENCE order_product_id_seq RESTART WITH 1;" +
+      "DELETE FROM products; ALTER SEQUENCE products_id_seq RESTART WITH 1;" +
+      "DELETE FROM orders; ALTER SEQUENCE orders_id_seq RESTART WITH 1;" +
       "DELETE FROM users; ALTER SEQUENCE users_id_seq RESTART WITH 1;";
     await conn.query(sql);
     conn.release();

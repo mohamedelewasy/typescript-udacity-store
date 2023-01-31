@@ -5,7 +5,8 @@ import ApiError from "../errors/apiError";
 
 const protect = AsyncHandler(async (req: Req, res: Res, next: Next) => {
   const token = req.headers.authorization;
-  if (!token) return next(new ApiError("unauthenticated", 401));
+  if (!token || (token as string).length < 8)
+    return next(new ApiError("unauthenticated", 401));
   try {
     const user = <{ id: number }>verifier(<string>token);
     req.body.user = user.id;
